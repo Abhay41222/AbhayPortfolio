@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abhay Bhadoriya — 3D Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#06070d;--fg:#f1f2ff;--mut:#8a8fae;--a:#8b5cff;--b:#22d3ee;--c:#ff5ac8}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--fg);font-family:Inter,system-ui,sans-serif;overflow-x:hidden}
+  #gl{position:fixed;inset:0;z-index:0;pointer-events:none}
+  nav,main,footer{position:relative;z-index:1}
+  nav{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:18px 5vw;backdrop-filter:blur(12px);background:linear-gradient(#06070dcc,#06070d00)}
+  .logo{font:800 20px Syne;letter-spacing:.05em}
+  .logo i{color:var(--b);font-style:normal}
+  nav ul{display:flex;gap:28px;list-style:none}
+  nav a{color:var(--mut);text-decoration:none;font-size:14px;transition:.2s}
+  nav a:hover{color:var(--fg)}
+  section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:110px 6vw 70px;max-width:1200px;margin:auto}
+  .hello{color:var(--b);letter-spacing:.2em;font-size:13px;margin-bottom:18px}
+  h1{font:800 clamp(48px,9vw,128px)/.92 Syne;letter-spacing:-.04em}
+  h1 em{font-style:normal;background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webkit-background-clip:text;color:transparent}
+  .role{font:500 clamp(18px,2.4vw,28px) Syne;color:var(--mut);margin:22px 0 14px;min-height:1.4em}
+  .role span{color:var(--fg)}
+  .lead{max-width:460px;color:var(--mut);line-height:1.65;margin-bottom:34px}
+  .btn{display:inline-block;padding:14px 28px;border-radius:12px;font:700 14px Syne;text-decoration:none;color:#fff;border:1px solid #ffffff2a;margin-right:12px;transition:.25s}
+  .btn.p{background:linear-gradient(135deg,var(--a),var(--b));border:0;box-shadow:0 10px 40px #8b5cff55}
+  .btn:hover{transform:translateY(-3px)}
+  h2{font:800 clamp(34px,5vw,64px) Syne;letter-spacing:-.03em;margin-bottom:10px}
+  h2 small{color:var(--b);font:500 13px Inter;letter-spacing:.2em;display:block;margin-bottom:10px}
+  .sub{color:var(--mut);margin-bottom:48px}
+  /* projects */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:26px;perspective:1100px}
+  .card{position:relative;border-radius:22px;overflow:hidden;background:linear-gradient(145deg,#ffffff12,#ffffff04);border:1px solid #ffffff1c;backdrop-filter:blur(14px);transform-style:preserve-3d;transition:transform .15s ease-out,box-shadow .3s;will-change:transform}
+  .card:hover{box-shadow:0 30px 80px #8b5cff30}
+  .thumb{height:190px;display:grid;place-items:center;font-size:64px;transform:translateZ(30px)}
+  .t1{background:linear-gradient(135deg,#8b5cff,#22d3ee)}.t2{background:linear-gradient(135deg,#ff5ac8,#8b5cff)}
+  .t3{background:linear-gradient(135deg,#22d3ee,#22c55e)}.t4{background:linear-gradient(135deg,#f59e0b,#ff5ac8)}
+  .body{padding:22px 24px 26px;transform:translateZ(40px)}
+  .body h3{font:700 22px Syne;margin-bottom:8px}
+  .body p{color:var(--mut);font-size:14px;line-height:1.55;margin-bottom:14px}
+  .badge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:99px;margin-bottom:10px;border:1px solid #f59e0b66;color:#fbbf24;background:#f59e0b12}
+  .chips span{display:inline-block;font-size:11px;padding:4px 10px;border-radius:99px;background:#ffffff10;margin:0 6px 6px 0;color:var(--b)}
+  /* skills sphere */
+  .skills{align-items:center;text-align:center}
+  #sphere{position:relative;width:min(420px,86vw);height:min(420px,86vw);margin:0 auto;cursor:grab;touch-action:none}
+  #sphere span{position:absolute;left:50%;top:50%;font:700 18px Syne;white-space:nowrap;will-change:transform,opacity;user-select:none;color:#fff}
+  /* about */
+  .about-g{display:grid;grid-template-columns:1.2fr 1fr;gap:50px;align-items:center}
+  .about-g p{color:var(--mut);line-height:1.75;margin-bottom:16px;font-size:17px}
+  .tl{border-left:2px solid #ffffff20;padding-left:26px}
+  .tl div{position:relative;margin-bottom:28px}
+  .tl div::before{content:"";position:absolute;left:-33px;top:5px;width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--a),var(--b));box-shadow:0 0 14px var(--a)}
+  .tl b{font:700 17px Syne}.tl small{display:block;color:var(--b);font-size:12px;margin:3px 0}
+  .tl span{color:var(--mut);font-size:14px}
+  /* contact */
+  .contact{align-items:center;text-align:center}
+  .contact h2{font-size:clamp(40px,8vw,104px)}
+  .links{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+  .links a{padding:12px 22px;border:1px solid #ffffff26;border-radius:99px;color:var(--fg);text-decoration:none;transition:.25s;background:#ffffff08}
+  .links a:hover{background:var(--a);border-color:var(--a);transform:translateY(-3px)}
+  footer{text-align:center;padding:36px;color:var(--mut);font-size:13px;border-top:1px solid #ffffff10}
+  .rv{opacity:0;transform:translateY(40px);transition:1s cubic-bezier(.2,.7,.2,1)}
+  .rv.in{opacity:1;transform:none}
+  @media(max-width:760px){nav ul{display:none}.about-g{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+
+<nav>
+  <div class="logo">AB<i>.</i>dev</div>
+  <ul><li><a href="#home">Home</a></li><li><a href="#work">Work</a></li><li><a href="#skills">Skills</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul>
+</nav>
+
+<main>
+  <section id="home">
+    <div class="hello">HELLO, I'M</div>
+    <h1>Abhay <em>Bhadoriya.</em></h1>
+    <div class="role">I build <span id="typed"></span><b style="color:var(--b)">|</b></div>
+    <p class="lead">B.Tech ECE student at MITS Gwalior, learning full-stack (MERN) development. I mix electronics and web to build practical projects.</p>
+    <div><a class="btn p" href="#work">View my work</a><a class="btn" href="#contact">Say hello</a></div>
+  </section>
+
+  <section id="work">
+    <h2 class="rv"><small>01 — SELECTED WORK</small>Projects</h2>
+    <p class="sub rv">A mix of web and electronics projects. Hover the cards, they tilt in 3D.</p>
+    <div class="grid">
+      <div class="card rv"><div class="thumb t1">📚</div><div class="body"><h3>EduVault</h3><p>Platform to access and organize previous-year question papers.</p><div class="chips"><span>React</span><span>Web App</span></div></div></div>
+      <div class="card rv"><div class="thumb t2">📍</div><div class="body"><div class="badge">In progress</div><h3>Placemint</h3><p>Placement tracker: eligibility checker, company database, calendar and application tracker. Planned: analytics and resume analyzer.</p><div class="chips"><span>React</span><span>Node.js</span><span>MongoDB</span></div></div></div>
+      <div class="card rv"><div class="thumb t3">💈</div><div class="body"><div class="badge">In progress</div><h3>Salon Management System</h3><p>Full-stack platform to simplify appointment management for salon owners.</p><div class="chips"><span>React</span><span>Express</span><span>MongoDB</span></div></div></div>
+      <div class="card rv"><div class="thumb t4">🪐</div><div class="body"><h3>Solar System Animation</h3><p>Solar system built with pure CSS animations and transforms.</p><div class="chips"><span>CSS3</span><span>Animations</span></div></div></div>
+      <div class="card rv"><div class="thumb t1">🔬</div><div class="body"><h3>CMOS Half Subtractor</h3><p>180 nm CMOS half subtractor designed and verified in LTSpice.</p><div class="chips"><span>LTSpice</span><span>CMOS</span><span>VLSI basics</span></div></div></div>
+      <div class="card rv"><div class="thumb t2">🖐️</div><div class="body"><h3>Gesture Control System</h3><p>Arduino-based gesture control project.</p><div class="chips"><span>Arduino</span><span>Sensors</span></div></div></div>
+    </div>
+    <p class="sub rv" style="margin:40px 0 0">Also exploring (concepts, not built yet): Personal AI Assistant · Elderly Fall Detection · Waste Segregation · Face Recognition Attendance.</p>
+  </section>
+
+  <section class="skills" id="skills">
+    <h2 class="rv"><small>02 — TOOLKIT</small>Skills</h2>
+    <p class="sub rv">Drag to spin. Tailwind and Framer Motion are still in learning.</p>
+    <div id="sphere"></div>
+  </section>
+
+  <section id="about">
+    <h2 class="rv"><small>03 — ABOUT</small>My journey</h2>
+    <div class="about-g">
+      <div class="rv">
+        <p>I'm an Electronics &amp; Communication Engineering student at MITS Gwalior, teaching myself full-stack web development. I like understanding concepts instead of copying code.</p>
+        <p>Right now I'm working on React, Node.js, Express, MongoDB and DSA, and building projects that sit between software and hardware. I also love gaming, AI and 3D interactive websites.</p>
+      </div>
+      <div class="tl rv">
+        <div><b>Learning full-stack (MERN)</b><small>Now</small><span>React, Tailwind, Framer Motion, Node, Express, MongoDB, DSA.</span></div>
+        <div><b>NPTEL Certification</b><small>2026</small><span>Fuzzy Sets, Logic and Systems &amp; Applications.</span></div>
+        <div><b>B.Tech, Electronics Engineering</b><small>MITS Gwalior · Expected 2027</small><span>CGPA 7.07 / 10.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <h2 class="rv"><small>04 — CONTACT</small>Let's build<br>something <em style="font-style:normal;background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webkit-background-clip:text;color:transparent">epic.</em></h2>
+    <p class="sub rv">Open to internships and placement opportunities · abhaybhadoriya903@gmail.com · Gwalior, India</p>
+    <div class="links rv"><a href="https://github.com/Abhay41222">GitHub</a><a href="https://www.linkedin.com/in/abhay-bhadoriya-5a80322b0">LinkedIn</a><a href="mailto:abhaybhadoriya903@gmail.com">Email</a></div>
+  </section>
+</main>
+<footer>© 2026 Abhay Bhadoriya · Built with WebGL &amp; CSS 3D</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  // reveal
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('in')})},{threshold:.15});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+
+  // typing effect
+  var words=['React interfaces','MERN stack projects','Arduino & ESP32 builds','things by learning'],wi=0,ci=0,del=false,hold=0,lastT=0,ty=document.getElementById('typed');
+  (function type(t){
+    requestAnimationFrame(type);
+    if(t<hold||t-lastT<(del?35:80))return;
+    lastT=t;var w=words[wi];ci+=del?-1:1;ty.textContent=w.slice(0,ci);
+    if(!del&&ci>=w.length){del=true;hold=t+1400}
+    else if(del&&ci<=0){del=false;wi=(wi+1)%words.length;hold=t+300}
+  })(0);
+
+  // card tilt
+  document.querySelectorAll('.card').forEach(function(c){
+    c.addEventListener('mousemove',function(e){var r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform='rotateY('+x*18+'deg) rotateX('+-y*18+'deg) translateZ(10px)'});
+    c.addEventListener('mouseleave',function(){c.style.transform=''});
+  });
+
+  // skills sphere (3D tag cloud)
+  var skills=['HTML5','CSS3','JavaScript','React.js','Node.js','Express','MongoDB','Mongoose','REST APIs','JWT','C','C++','Python','Git','GitHub','Vite','Arduino','ESP32','LTSpice','Tailwind (learning)','Framer Motion (learning)'];
+  var sp=document.getElementById('sphere'),items=[],n=skills.length,R=sp.offsetWidth/2*.85||150;
+  skills.forEach(function(s,i){
+    var phi=Math.acos(-1+(2*i+1)/n),th=Math.sqrt(n*Math.PI)*phi,el=document.createElement('span');
+    el.textContent=s;sp.appendChild(el);
+    items.push({el:el,x:Math.cos(th)*Math.sin(phi),y:Math.cos(phi),z:Math.sin(th)*Math.sin(phi)});
+  });
+  var vx=.004,vy=.006,dragging=false,lx,ly;
+  function rot(ax,ay){
+    var cx=Math.cos(ax),sx=Math.sin(ax),cy=Math.cos(ay),sy=Math.sin(ay);
+    items.forEach(function(p){
+      var y=p.y*cx-p.z*sx,z=p.y*sx+p.z*cx;p.y=y;p.z=z;
+      var x=p.x*cy+p.z*sy;z=-p.x*sy+p.z*cy;p.x=x;p.z=z;
+    });
+  }
+  function draw(){
+    R=sp.offsetWidth/2*.85;
+    items.forEach(function(p,i){
+      var s=(p.z+2)/3,hue=(i*37)%360;
+      p.el.style.transform='translate(-50%,-50%) translate('+p.x*R+'px,'+p.y*R+'px) scale('+(.55+s*.7)+')';
+      p.el.style.opacity=.25+s*.75;p.el.style.zIndex=Math.round(p.z*100)+100;
+      p.el.style.color='hsl('+hue+',85%,72%)';
+    });
+  }
+  sp.addEventListener('pointerdown',function(e){dragging=true;lx=e.clientX;ly=e.clientY;sp.setPointerCapture(e.pointerId)});
+  sp.addEventListener('pointermove',function(e){if(!dragging)return;vy=(e.clientX-lx)*.0008;vx=-(e.clientY-ly)*.0008;rot(vx*8,vy*8);lx=e.clientX;ly=e.clientY});
+  sp.addEventListener('pointerup',function(){dragging=false});
+  (function spin(){requestAnimationFrame(spin);if(!dragging){rot(vx,vy);vx*=.995;vy=vy*.995+.00005;if(Math.abs(vy)<.003)vy=.003*(vy<0?-1:1)}draw()})();
+
+  // WebGL background
+  if(!window.THREE)return;
+  var canvas=document.getElementById('gl'),renderer;
+  try{renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true})}catch(e){return}
+  renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+  var scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(55,1,.1,200);cam.position.z=9;
+  scene.fog=new THREE.FogExp2(0x06070d,.035);
+  scene.add(new THREE.AmbientLight(0x404070,1.1));
+  var l1=new THREE.PointLight(0x8b5cff,2.4,60);l1.position.set(6,5,6);scene.add(l1);
+  var l2=new THREE.PointLight(0x22d3ee,2.4,60);l2.position.set(-6,-4,4);scene.add(l2);
+  var l3=new THREE.PointLight(0xff5ac8,1.4,60);l3.position.set(0,6,-4);scene.add(l3);
+
+  var hero=new THREE.Mesh(new THREE.IcosahedronGeometry(2.1,1),new THREE.MeshStandardMaterial({color:0x7a5cff,metalness:.85,roughness:.2,flatShading:true}));
+  hero.add(new THREE.Mesh(new THREE.IcosahedronGeometry(2.3,1),new THREE.MeshBasicMaterial({color:0x22d3ee,wireframe:true,transparent:true,opacity:.14})));
+  scene.add(hero);
+  var ring=new THREE.Mesh(new THREE.TorusGeometry(3.4,.03,16,140),new THREE.MeshBasicMaterial({color:0xff5ac8,transparent:true,opacity:.6}));
+  hero.add(ring);
+
+  var floaters=[],geoms=[new THREE.BoxGeometry(.5,.5,.5),new THREE.TetrahedronGeometry(.42),new THREE.OctahedronGeometry(.4),new THREE.TorusGeometry(.3,.1,12,24)];
+  for(var i=0;i<22;i++){
+    var m=new THREE.Mesh(geoms[i%4],new THREE.MeshStandardMaterial({color:[0x8b5cff,0x22d3ee,0xff5ac8][i%3],metalness:.7,roughness:.3}));
+    m.position.set((Math.random()-.5)*26,(Math.random()-.5)*34,(Math.random()-.5)*16-3);
+    m.userData={sp:Math.random()*.01+.003,f:Math.random()*2,ph:Math.random()*6};
+    scene.add(m);floaters.push(m);
+  }
+  var N=800,pos=new Float32Array(N*3);for(var j=0;j<N*3;j++)pos[j]=(Math.random()-.5)*70;
+  var pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  var pts=new THREE.Points(pg,new THREE.PointsMaterial({color:0xa5b4ff,size:.06,transparent:true,opacity:.8}));scene.add(pts);
+
+  var mx=0,my=0,tx=0,ty=0,sc=0;
+  addEventListener('mousemove',function(e){mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5});
+  addEventListener('scroll',function(){sc=scrollY/Math.max(1,document.body.scrollHeight-innerHeight)});
+  function resize(){renderer.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}
+  addEventListener('resize',resize);resize();
+
+  var clock=new THREE.Clock();
+  var lastR=0;
+  (function loop(now){
+    requestAnimationFrame(loop);
+    if(document.hidden||now-lastR<30)return;lastR=now;
+    var t=clock.getElapsedTime(),wide=innerWidth>800;
+    tx+=(mx-tx)*.05;ty+=(my-ty)*.05;
+    hero.rotation.x=t*.2+ty*1.4+sc*5;hero.rotation.y=t*.3+tx*2+sc*7;
+    ring.rotation.x=t*.5;
+    hero.position.x=(wide?3.4:0)*(1-Math.min(1,sc*3.5));
+    hero.position.y=Math.sin(t)*.25+(wide?0:2)-sc*2;
+    hero.scale.setScalar((wide?1:.65)*(1-sc*.25));
+    cam.position.x=tx*1.4;cam.position.y=-ty*1.4-sc*14;cam.lookAt(0,-sc*14,0);
+    hero.position.y-=sc*-0; // keeps hero near camera focus
+    pts.rotation.y=t*.02;
+    floaters.forEach(function(m){var d=m.userData;m.rotation.x+=d.sp*2;m.rotation.y+=d.sp*3;m.position.y+=Math.sin(t*d.f+d.ph)*.003});
+    l1.position.x=Math.sin(t*.6)*7;l2.position.y=Math.cos(t*.5)*6;
+    renderer.render(scene,cam);
+  })(0);
+})();
+</script>
+</body>
+</html>
