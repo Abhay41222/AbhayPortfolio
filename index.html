@@ -151,7 +151,7 @@
   });
 
   // skills sphere (3D tag cloud)
-  var skills=['HTML5','CSS3','JavaScript','React.js','Node.js','Express','MongoDB','Mongoose','REST APIs','JWT','C','C++','Python','Git','GitHub','Vite','Arduino','ESP32','LTSpice','Tailwind (learning)','Framer Motion (learning)'];
+  var skills=['HTML5','CSS3','JavaScript','React.js','Node.js','Express','MongoDB','REST APIs','C++','Python','Git','GitHub','Vite','Tailwind (learning)','Framer Motion (learning)'];
   var sp=document.getElementById('sphere'),items=[],n=skills.length,R=sp.offsetWidth/2*.85||150;
   skills.forEach(function(s,i){
     var phi=Math.acos(-1+(2*i+1)/n),th=Math.sqrt(n*Math.PI)*phi,el=document.createElement('span');
